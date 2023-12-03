@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import static utilities.PageUtils.*;
 
 import java.util.List;
 
@@ -23,25 +24,29 @@ public class HomePageSteps extends HomePage {
         destinationInput.sendKeys(Keys.ENTER);
     }
 
-
     public void selectDepartDate(String day, String month, String year) {
         clickElement(departDate);
         selectingDateProcess(day, month, year);
     }
 
     public void selectReturnDate(String day, String month, String year) {
-        clickElement(returnDate2);
+        clickElement(returnDate);
         selectingDateProcess(day, month, year);
     }
 
     private void selectingDateProcess(String day, String month, String year) {
-        By SPECIFIC_DATE_TEXT = By.xpath("//h3[contains(text(),'" + month + " " + year + "')]/../../div[3]//button[@data-day='" + day + "']");
+        var SPECIFIC_DATE_TEXT = By.xpath("//h3[contains(text(),'" + month + " " + year + "')]/../../div[3]//button[@data-day='" + day + "']");
         date = Driver.getDriver().findElements(SPECIFIC_DATE_TEXT);
 
-        while (date.isEmpty()) {
+        var counter = 0;
+        while (date.isEmpty() && counter<6) {
             clickNextMountButton();
             date = Driver.getDriver().findElements(SPECIFIC_DATE_TEXT);
+            counter++;
         }
+
+        var message = "1 yıldan daha uzun bir tarih seçildi";
+        Assert.assertTrue(message,counter<6);
 
         date.get(0).click();
     }
@@ -50,9 +55,8 @@ public class HomePageSteps extends HomePage {
         clickElement(monthForwardButton);
     }
 
-    public void chooseNonStopFlight(String str) {
-        boolean bool = Boolean.parseBoolean(str);
-        if (bool) {
+    public void chooseNonStopFlight(String type) {
+        if (type.equals("true")) {
             clickElement(transitCheckbox);
         }
     }
@@ -83,18 +87,18 @@ public class HomePageSteps extends HomePage {
     public void searchForResults() {
         clickElement(searchButton);
     }
+
     public void verifyThatNavigatedToResultsPage() {
-        String title = Driver.getDriver().getTitle();
-        System.out.println("title: " + title);
-        Assert.assertTrue(title.contains("uçak bileti fiyatları - ENUYGUN"));
+        var title = Driver.getDriver().getTitle();
+        var message = "Results Page geçilemedi";
+        Assert.assertTrue(message, title.contains("uçak bileti fiyatları - ENUYGUN"));
     }
 
     public void resultsShouldBeOnlyNonStopFlights() {
-        String nonStop = "Direkt Uçuş";
-        List<WebElement> results = Driver.getDriver().findElements(By.cssSelector(".summary-transit"));
-        for (WebElement result : results) {
-            String FlightType = result.getText();
-            Assert.assertEquals(FlightType, nonStop);
-        }
+        var nonStop = "Direkt Uçuş";
+        var results = Driver.getDriver().findElements(By.cssSelector(".summary-transit"));
+        var message = "uçuşlar sadece aktarmasızları içermiyor";
+        Assert.assertTrue(message, results.stream().map(WebElement::getText).allMatch(n -> n.equals(nonStop)));
     }
+
 }

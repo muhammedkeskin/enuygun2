@@ -6,7 +6,6 @@ import java.util.Properties;
 
 public class ConfigurationReader {
 
-
     public static Properties properties;
 
     static {

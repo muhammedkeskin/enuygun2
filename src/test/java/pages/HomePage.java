@@ -1,14 +1,11 @@
 package pages;
 
-import utilities.CommonMethods;
 import utilities.Driver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import utilities.CommonMethods;
-import utilities.Driver;
 
-public class HomePage extends CommonMethods {
+public class HomePage {
 
     public HomePage() {
         PageFactory.initElements(Driver.getDriver(), this);
@@ -23,11 +20,8 @@ public class HomePage extends CommonMethods {
     @FindBy(css = "input[name='departureDate']")
     public WebElement departDate;
 
-    @FindBy(css = "input[name='returnDate']")
-    public WebElement returnDate;
-
     @FindBy(xpath = "//div[text()='Dönüş Ekle']")
-    public WebElement returnDate2;
+    public WebElement returnDate;
 
     @FindBy(css = "button[data-testid*='month-forward-button']")
     public WebElement monthForwardButton;
@@ -52,8 +46,6 @@ public class HomePage extends CommonMethods {
 
     @FindBy(xpath = "//div[text()='Ucuz bilet bul']")
     public WebElement searchButton;
-
-
 
 }
 

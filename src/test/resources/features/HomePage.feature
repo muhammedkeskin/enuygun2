@@ -1,9 +1,6 @@
 @enuygun
   Feature: HomePage
 
-    Background:
-      Given Launch Browser
-
     Scenario: Selecting Ticket
 
       Given The user navigates to Home Page
